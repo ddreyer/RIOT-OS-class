@@ -24,7 +24,7 @@
 #define ENABLE_DEBUG (0)
 #include "debug.h"
 
-void __attribute__((weak)) pm_set_lowest(void) {}
+//void __attribute__((weak)) pm_set_lowest(void) {}
 
 void __attribute__((weak)) pm_off(void)
 {
