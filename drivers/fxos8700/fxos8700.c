@@ -144,7 +144,10 @@ int fxos8700_read(fxos8700_t* dev, fxos8700_measurement_t* m)
 {
 	uint8_t data[12];
 	uint8_t ready = 0;
-
+    
+    if (fxos8700_set_active(dev)) {
+        return -1;
+    }
     while(!(ready & 0x08)) {
 		fxos8700_read_regs(dev, FXOS8700_REG__STATUS, &ready, 1);
 	}
@@ -154,9 +157,13 @@ int fxos8700_read(fxos8700_t* dev, fxos8700_measurement_t* m)
 
 	/* Read all data at once */
 	if (fxos8700_read_regs(dev, FXOS8700_REG_OUT_X_MSB, &data[0], 12)) {
-	  return -1;
+	  return -2;
 	}
-
+    
+    if (fxos8700_set_idle(dev)) {
+        return -3;
+    }
+    
 	/* Read accelerometer */
 	m->acc_x = (int16_t) ((data[0]<<6) | (data[1]>>2));
 	m->acc_y = (int16_t) ((data[2]<<6) | (data[3]>>2));
